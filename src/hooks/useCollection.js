@@ -1,3 +1,5 @@
+// opens a real time connection to firestore collection
+
 import { useEffect, useRef, useState } from 'react';
 import { projectFirestore } from '../firebase/config';
 
