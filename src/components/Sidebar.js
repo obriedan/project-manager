@@ -13,7 +13,7 @@ export default function Sidebar() {
           {/* Avatar and username here later */}
           <p>Hey user</p>
         </div>
-        <nav class='links'>
+        <nav className='links'>
           <ul>
             <li>
               <NavLink to='/'>
