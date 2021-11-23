@@ -28,6 +28,7 @@ export default function Login() {
         <input
           required
           type='password'
+          autoComplete='current-password'
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
