@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useCollection } from '../../hooks/useCollection';
 import { timestamp } from '../../firebase/config';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useFirestore } from '../../hooks/useFirestore';
+import { useNavigate } from 'react-router-dom';
 // components
 import Select from 'react-select';
 
@@ -19,6 +21,8 @@ const categories = [
 export default function Create() {
   const { documents } = useCollection('users');
   const { user } = useAuthContext();
+  const { response, addDocument } = useFirestore('projects');
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   // form field values
@@ -41,7 +45,7 @@ export default function Create() {
     }
   }, [documents]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setformError(null);
 
@@ -80,7 +84,11 @@ export default function Create() {
       createdBy,
       assignedUsersList,
     };
-    console.log(project);
+
+    await addDocument(project);
+    if (response.success) {
+      navigate('/');
+    }
   };
 
   return (
@@ -118,9 +126,17 @@ export default function Create() {
           <span>Assign to:</span>
           <Select onChange={(option) => setAssignedUsers(option)} options={users} isMulti />
         </label>
-        <button className='btn'>Add Project</button>
+
+        {!response.isPending ? (
+          <button className='btn'>Add Project</button>
+        ) : (
+          <button disabled className='btn'>
+            Adding...
+          </button>
+        )}
 
         {formError && <p className='error'>{formError}</p>}
+        {response.error && <p className='error'>{response.error}</p>}
       </form>
     </div>
   );
