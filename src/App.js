@@ -33,7 +33,7 @@ function App() {
                 element={user ? <Create /> : <Navigate replace to='/login' />}
               />
               <Route
-                path='/project/:id'
+                path='/projects/:id'
                 element={user ? <Project /> : <Navigate replace to='/login' />}
               />
               <Route path='*' element={user ? <Dashboard /> : <Navigate replace to='/login' />} />
