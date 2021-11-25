@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { timestamp } from '../../firebase/config';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useFirestore } from '../../hooks/useFirestore';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function ProjectComments() {
+export default function ProjectComments({ project }) {
   const [newComment, setNewComment] = useState('');
   const { user } = useAuthContext();
+  const { response, updateDocument } = useFirestore('projects');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +20,12 @@ export default function ProjectComments() {
       id: uuidv4(),
     };
 
-    console.log(commentToAdd);
+    await updateDocument(project.id, {
+      comments: [...project.comments, commentToAdd],
+    });
+    if (!response.error) {
+      setNewComment('');
+    }
   };
   return (
     <div className='project-comments'>
